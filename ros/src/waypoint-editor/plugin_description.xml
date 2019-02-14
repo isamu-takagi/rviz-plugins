@@ -1,0 +1,5 @@
+<library path="lib/libwaypoint-editor">
+  <class type="rviz_plugins::EventCapture" base_class_type="rviz::Tool">
+    <description>The tool for event capturing</description>
+  </class>
+</library>
