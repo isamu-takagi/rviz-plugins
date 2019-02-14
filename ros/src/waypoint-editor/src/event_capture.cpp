@@ -20,11 +20,17 @@ void EventCapture::onInitialize()
 void EventCapture::activate()
 {
     printf("activate\n");
+
+    property_ = new rviz::FloatProperty("Event Capture");
+    getPropertyContainer()->addChild( property_ );
 }
 
 void EventCapture::deactivate()
 {
     printf("deactivate\n");
+
+    delete property_;
+    property_ = nullptr;
 }
 
 int EventCapture::processMouseEvent(rviz::ViewportMouseEvent& event)

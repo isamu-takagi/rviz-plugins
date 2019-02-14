@@ -1,5 +1,11 @@
 <library path="lib/libwaypoint-editor">
+
   <class type="rviz_plugins::EventCapture" base_class_type="rviz::Tool">
     <description>The tool for event capturing</description>
   </class>
+
+  <class type="rviz_plugins::WaypointEditor" base_class_type="rviz::Panel">
+    <description>The panel for waypoint editing</description>
+  </class>
+
 </library>

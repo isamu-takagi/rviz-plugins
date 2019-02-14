@@ -4,6 +4,7 @@
 //#include <ros/ros.h>
 #include <rviz/tool.h>
 #include <rviz/viewport_mouse_event.h>
+#include <rviz/properties/float_property.h>
 
 namespace rviz_plugins {
 
@@ -20,6 +21,10 @@ class EventCapture: public rviz::Tool
         void activate() override;
         void deactivate() override;
         int processMouseEvent(rviz::ViewportMouseEvent& event) override;
+
+    private:
+
+        rviz::FloatProperty* property_;
 };
 
 }
