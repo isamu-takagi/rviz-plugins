@@ -1,5 +1,7 @@
 #include "waypoint_editor.hpp"
 
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <visualization_msgs/MarkerArray.h>
 
 #include <QPushButton>
@@ -29,7 +31,54 @@ WaypointEditor::~WaypointEditor()
 
 void WaypointEditor::onInitialize()
 {
+    setEnabled(false);
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
+    sub_ = nh_.subscribe("/waypoint_editor/event", 1, &WaypointEditor::onEventCapture, this);
+
+    tf2_ros::Buffer tf_buffer;
+    tf2_ros::TransformListener tf_listener(tf_buffer);
+    try
+    {
+        transform_ = tf_buffer.lookupTransform("map", "world", ros::Time::now(), ros::Duration(1.0));
+    }
+    catch (tf2::TransformException& exception)
+    {
+        ROS_WARN("failed to lookup transform: %s", exception.what());
+    }
+}
+
+void WaypointEditor::onEventCapture(const geometry_msgs::Point& msg)
+{
+    geometry_msgs::Point point;
+    tf2::doTransform(msg, point, transform_);
+
+    if(waypoints_.empty())
+    {
+        Waypoint waypoint;
+        waypoint.x = point.x;
+        waypoint.y = point.y;
+        waypoint.z = point.z;
+        waypoints_.push_back(waypoint);
+    }
+    else
+    {
+        Waypoint origin, vector;
+        origin = waypoints_.back();
+        vector.x = point.x - origin.x;
+        vector.y = point.y - origin.y;
+        vector.z = point.z - origin.z;
+
+        int loop = static_cast<int>(hypot(vector.x, vector.y)) + 1;
+        for(int i = 1; i <= loop; ++i)
+        {
+            Waypoint waypoint;
+            waypoint.x = origin.x + (vector.x * i / loop);
+            waypoint.y = origin.y + (vector.y * i / loop);
+            waypoint.z = origin.z + (vector.z * i / loop);
+            waypoints_.push_back(waypoint);
+        }
+    }
+    publish_markers();
 }
 
 void WaypointEditor::load_waypoints()

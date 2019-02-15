@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 2.8.3)
 project(waypoint-editor)
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED COMPONENTS roscpp rviz)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rviz
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
+  geometry_msgs
+)
+
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
 set(QT_LIBRARIES Qt5::Widgets)
 add_definitions(-DQT_NO_KEYWORDS)

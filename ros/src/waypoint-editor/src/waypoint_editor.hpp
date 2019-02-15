@@ -5,6 +5,8 @@
 
 #include <ros/ros.h>
 #include <rviz/panel.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/TransformStamped.h>
 
 namespace rviz_plugins {
 
@@ -21,13 +23,16 @@ class WaypointEditor: public rviz::Panel
 
     private:
 
+        void onEventCapture(const geometry_msgs::Point& msg);
         void load_waypoints();
         void publish_markers();
 
         Waypoints waypoints_;
+        geometry_msgs::TransformStamped transform_;
 
         ros::NodeHandle nh_;
-        ros::Publisher pub_;
+        ros::Publisher  pub_;
+        ros::Subscriber sub_;
 };
 
 }
