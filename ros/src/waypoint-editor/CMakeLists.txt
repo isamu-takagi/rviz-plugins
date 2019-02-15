@@ -25,12 +25,12 @@ include_directories(
 )
 
 qt5_wrap_cpp(QT_HEADER_FILES
-  src/event_capture.hpp
+  src/event_capture_tool.hpp
   src/waypoint_editor.hpp
 )
 
 set(QT_SOURCE_FILES
-  src/event_capture.cpp
+  src/event_capture_tool.cpp
   src/waypoint_editor.cpp
 )
 

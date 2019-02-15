@@ -1,4 +1,4 @@
-#include "event_capture.hpp"
+#include "event_capture_tool.hpp"
 
 #include <OGRE/OgreEntity.h>
 #include <rviz/geometry.h>
