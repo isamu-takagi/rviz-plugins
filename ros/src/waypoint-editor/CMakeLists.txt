@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_geometry_msgs
   tf2_ros
+  std_msgs
   geometry_msgs
 )
 
@@ -26,11 +27,15 @@ include_directories(
 
 qt5_wrap_cpp(QT_HEADER_FILES
   src/event_capture_tool.hpp
+  src/event_capture_server.hpp
+  src/event_capture_client.hpp
   src/waypoint_editor.hpp
 )
 
 set(QT_SOURCE_FILES
   src/event_capture_tool.cpp
+  src/event_capture_server.cpp
+  src/event_capture_client.cpp
   src/waypoint_editor.cpp
 )
 

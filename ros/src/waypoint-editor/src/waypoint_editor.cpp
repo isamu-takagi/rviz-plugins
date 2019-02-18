@@ -33,6 +33,8 @@ WaypointEditor::~WaypointEditor()
 
 void WaypointEditor::onInitialize()
 {
+    event_client_.initialize();
+
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
     sub_ = nh_.subscribe("/waypoint_editor/event", 1, &WaypointEditor::onEventCapture, this);
 
