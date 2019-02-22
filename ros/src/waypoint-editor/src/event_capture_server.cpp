@@ -10,18 +10,13 @@ namespace rviz_plugins
 
 EventCaptureServer::EventCaptureServer()
 {
-
+    pub_ = nh_.advertise<std_msgs::String>("/event_capture/mouse", 10);
+    //sub_ = nh_.subscribe("/event_capture/command", 10, callback, this);
 }
 
 EventCaptureServer::~EventCaptureServer()
 {
 
-}
-
-void EventCaptureServer::initialize()
-{
-    pub_ = nh_.advertise<std_msgs::String>("/event_capture/event", 10);
-    //sub_ = nh_.subscribe("/event_capture/command", 10, callback, this);
 }
 
 void EventCaptureServer::send(const rviz::ViewportMouseEvent &event)

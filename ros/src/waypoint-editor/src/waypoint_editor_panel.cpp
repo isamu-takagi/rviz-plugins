@@ -1,4 +1,4 @@
-#include "waypoint_editor.hpp"
+#include "waypoint_editor_panel.hpp"
 
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -33,10 +33,10 @@ WaypointEditor::~WaypointEditor()
 
 void WaypointEditor::onInitialize()
 {
-    event_client_.initialize();
-
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
     sub_ = nh_.subscribe("/waypoint_editor/event", 1, &WaypointEditor::onEventCapture, this);
+
+    capture_client_.setMouseEvent(this, &WaypointEditor::processMouseEvent);
 
     tf2_ros::Buffer tf_buffer;
     tf2_ros::TransformListener tf_listener(tf_buffer);
@@ -48,7 +48,29 @@ void WaypointEditor::onInitialize()
     {
         setEnabled(false);
         ROS_WARN("failed to lookup transform: %s", exception.what());
+        transform_.transform.translation.x = 0.0;
+        transform_.transform.translation.y = 0.0;
+        transform_.transform.translation.z = 0.0;
+        transform_.transform.rotation.x = 0.0;
+        transform_.transform.rotation.y = 0.0;
+        transform_.transform.rotation.z = 0.0;
+        transform_.transform.rotation.w = 1.0;
     }
+}
+
+#include <iostream>
+void WaypointEditor::processMouseEvent(const MouseEvent& event)
+{
+    std::cout << event.raypos.x << " " << event.raypos.y << " " << event.raypos.z  << std::endl;
+    std::cout << event.rayvec.x << " " << event.rayvec.y << " " << event.rayvec.z  << std::endl;
+    std::cout << event.campos.x << " " << event.campos.y << " " << event.campos.z  << std::endl;
+    std::cout << event.camvec.x << " " << event.camvec.y << " " << event.camvec.z  << std::endl; 
+
+    geometry_msgs::Point point;
+    point.x = event.raypos.x;
+    point.y = event.raypos.y;
+    point.z = 0.0;    
+    onEventCapture(point);
 }
 
 void WaypointEditor::onEventCapture(const geometry_msgs::Point& msg)
@@ -127,7 +149,8 @@ void WaypointEditor::publish_markers()
     // Points
     {
         visualization_msgs::Marker marker;
-        marker.header.frame_id = "/map";
+        //marker.header.frame_id = "/map";
+        marker.header.frame_id = "/world";
         marker.header.stamp = ros::Time::now();
         marker.ns = "node";
         marker.id = 0;

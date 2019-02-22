@@ -29,14 +29,14 @@ qt5_wrap_cpp(QT_HEADER_FILES
   src/event_capture_tool.hpp
   src/event_capture_server.hpp
   src/event_capture_client.hpp
-  src/waypoint_editor.hpp
+  src/waypoint_editor_panel.hpp
 )
 
 set(QT_SOURCE_FILES
   src/event_capture_tool.cpp
   src/event_capture_server.cpp
   src/event_capture_client.cpp
-  src/waypoint_editor.cpp
+  src/waypoint_editor_panel.cpp
 )
 
 add_library(${PROJECT_NAME}

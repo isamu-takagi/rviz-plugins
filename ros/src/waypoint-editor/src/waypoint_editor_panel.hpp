@@ -1,10 +1,8 @@
-#ifndef WAYPOINT_EDITOR_HPP
-#define WAYPOINT_EDITOR_HPP
-
+#ifndef WAYPOINT_EDITOR_PANEL_HPP
+#define WAYPOINT_EDITOR_PANEL_HPP
 
 #include "event_capture_client.hpp"
 #include "waypoint.hpp"
-
 
 #include <ros/ros.h>
 #include <rviz/panel.h>
@@ -26,12 +24,12 @@ class WaypointEditor: public rviz::Panel
 
     private:
 
+        void processMouseEvent(const MouseEvent& event);
         void onEventCapture(const geometry_msgs::Point& msg);
         void load_waypoints();
         void publish_markers();
 
-        EventCaptureClient event_client_;
-
+        EventCaptureClient capture_client_;
         Waypoints waypoints_;
         geometry_msgs::TransformStamped transform_;
 

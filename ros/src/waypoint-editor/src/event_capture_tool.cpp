@@ -15,7 +15,6 @@ EventCapture::~EventCapture()
 
 void EventCapture::onInitialize()
 {
-    event_server_.initialize();
     move_tool_.initialize(context_);
 }
 

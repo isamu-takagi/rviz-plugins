@@ -4,6 +4,18 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
+
+struct Point
+{
+    double x, y, z;
+};
+
+struct MouseEvent
+{
+    Point raypos, rayvec, campos, camvec;
+};
+
+
 namespace rviz_plugins {
 
 class EventCaptureClient
@@ -13,16 +25,23 @@ class EventCaptureClient
         EventCaptureClient();
         ~EventCaptureClient();
 
-        void initialize();
+        template<class T>
+        void setMouseEvent(T* obj, void(T::*func)(const MouseEvent& event))
+        {
+            callback_mouse_ = [=](const MouseEvent& event){ (obj->*func)(event); };
+        }
 
     private:
 
-        void on_receive(const std_msgs::String& msg);
+        void callbackMouseEvent(const std_msgs::String& msg);
+        //void callbackKeyEvent(const std_msgs::String& msg);
 
         ros::AsyncSpinner spinner_;
         ros::NodeHandle nh_;
         ros::Publisher  pub_;
         ros::Subscriber sub_;
+
+        std::function<void(const MouseEvent& event)> callback_mouse_;
 };
 
 }
