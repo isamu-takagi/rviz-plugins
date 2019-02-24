@@ -1,20 +1,9 @@
 #ifndef EVENT_CAPTURE_CLIENT_HPP
 #define EVENT_CAPTURE_CLIENT_HPP
 
+#include "types/geometry.hpp"
 #include <ros/ros.h>
 #include <std_msgs/String.h>
-
-
-struct Point
-{
-    double x, y, z;
-};
-
-struct MouseEvent
-{
-    Point raypos, rayvec, campos, camvec;
-};
-
 
 namespace rviz_plugins {
 

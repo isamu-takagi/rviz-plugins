@@ -26,16 +26,22 @@ include_directories(
 )
 
 qt5_wrap_cpp(QT_HEADER_FILES
-  src/event_capture_tool.hpp
   src/event_capture_server.hpp
   src/event_capture_client.hpp
+  src/event_capture_tool.hpp
+  src/point_cloud_map.hpp
+  src/waypoint_editor_library.hpp
+  src/waypoint_editor_marker.hpp
   src/waypoint_editor_panel.hpp
 )
 
 set(QT_SOURCE_FILES
-  src/event_capture_tool.cpp
   src/event_capture_server.cpp
   src/event_capture_client.cpp
+  src/event_capture_tool.cpp
+  src/point_cloud_map.cpp
+  src/waypoint_editor_library.cpp
+  src/waypoint_editor_marker.cpp
   src/waypoint_editor_panel.cpp
 )
 
