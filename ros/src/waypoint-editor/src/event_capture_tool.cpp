@@ -30,7 +30,7 @@ void EventCapture::deactivate()
 
 int EventCapture::processMouseEvent(rviz::ViewportMouseEvent& event)
 {
-    if(event.rightDown())
+    if(event.right() || event.rightDown() || event.rightUp())
     {
         event_server_.send(event);
     }

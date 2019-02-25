@@ -35,17 +35,12 @@ void WaypointEditor::onInitialize()
 #include <iostream>
 void WaypointEditor::processMouseEvent(const MouseEvent& event)
 {
-    std::cout << event.raypos.x << " " << event.raypos.y << " " << event.raypos.z  << std::endl;
-    std::cout << event.rayvec.x << " " << event.rayvec.y << " " << event.rayvec.z  << std::endl;
-    std::cout << event.campos.x << " " << event.campos.y << " " << event.campos.z  << std::endl;
-    std::cout << event.camvec.x << " " << event.camvec.y << " " << event.camvec.z  << std::endl; 
-
-    Point gndpos = point_cloud_map_.getGroundPoint(event.raypos, event.rayvec);
-
-    std::cout << gndpos.x << " " << gndpos.y << " " << gndpos.z  << std::endl; 
-
-    waypoint_editor_.add(gndpos);
-    waypoint_viewer_.publish(waypoint_editor_.get());
+    if(event.right_down)
+    {
+        Point gndpos = point_cloud_map_.getGroundPoint(event.select);
+        waypoint_editor_.add(gndpos);
+        waypoint_viewer_.publish(waypoint_editor_.get());
+    }
 }
 
 }

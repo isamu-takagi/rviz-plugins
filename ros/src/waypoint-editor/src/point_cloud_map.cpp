@@ -31,9 +31,9 @@ bool PointCloudMap::updateTransform()
     }
 }
 
-Point PointCloudMap::getGroundPoint(const Point& raypos, const Point& rayvec)
+Point PointCloudMap::getGroundPoint(const Ray& ray)
 {
-    Point gndpos = doTransform(raypos);
+    Point gndpos = doTransform(ray.origin);
     gndpos.z = 0;
     return gndpos;
 }

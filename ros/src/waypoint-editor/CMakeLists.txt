@@ -21,6 +21,7 @@ catkin_package(
 )
 
 include_directories(
+  src
   ${catkin_INCLUDE_DIRS}
   ${Qt5_INCLUDE_DIRS}
 )

@@ -1,5 +1,5 @@
-#ifndef WAYPOINT_HPP
-#define WAYPOINT_HPP
+#ifndef TYPES_WAYPOINT_HPP
+#define TYPES_WAYPOINT_HPP
 
 #include <vector>
 

@@ -13,7 +13,6 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints)
 {
     const std::string frame = "/world";
     visualization_msgs::MarkerArray msg;
-    printf("View Waypoints: %d\n", waypoints.size());
 
     // Points
     {

@@ -1,8 +1,6 @@
 #ifndef WAYPOINT_EDITOR_PANEL_HPP
 #define WAYPOINT_EDITOR_PANEL_HPP
 
-
-#include "types/waypoint.hpp"
 #include "event_capture_client.hpp"
 #include "point_cloud_map.hpp"
 #include "waypoint_editor_library.hpp"

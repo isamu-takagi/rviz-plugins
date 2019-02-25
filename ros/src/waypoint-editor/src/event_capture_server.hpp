@@ -13,7 +13,7 @@ class EventCaptureServer
         EventCaptureServer();
         ~EventCaptureServer();
 
-        void send(const rviz::ViewportMouseEvent& event);
+        void send(rviz::ViewportMouseEvent& event);
 
     private:
 

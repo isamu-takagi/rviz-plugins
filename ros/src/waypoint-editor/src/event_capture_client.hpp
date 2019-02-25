@@ -1,7 +1,7 @@
 #ifndef EVENT_CAPTURE_CLIENT_HPP
 #define EVENT_CAPTURE_CLIENT_HPP
 
-#include "types/geometry.hpp"
+#include "types/capture.hpp"
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 

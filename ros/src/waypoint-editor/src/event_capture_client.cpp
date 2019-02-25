@@ -2,8 +2,7 @@
 
 #include <sstream>
 
-namespace rviz_plugins
-{
+namespace rviz_plugins {
 
 EventCaptureClient::EventCaptureClient(): spinner_(1)
 {
@@ -23,10 +22,14 @@ void EventCaptureClient::callbackMouseEvent(const std_msgs::String& msg)
     {
         std::istringstream iss(msg.data);
         MouseEvent event;
-        iss >> event.raypos.x >> event.raypos.y >> event.raypos.z;
-        iss >> event.rayvec.x >> event.rayvec.y >> event.rayvec.z;
-        iss >> event.campos.x >> event.campos.y >> event.campos.z;
-        iss >> event.camvec.x >> event.camvec.y >> event.camvec.z;
+        iss >> event.select.origin.x    >> event.select.origin.y    >> event.select.origin.z;
+        iss >> event.select.direction.x >> event.select.direction.y >> event.select.direction.z;
+        iss >> event.camera.origin.x    >> event.camera.origin.y    >> event.camera.origin.z;
+        iss >> event.camera.direction.x >> event.camera.direction.y >> event.camera.direction.z;
+        iss >> event.left   >> event.left_down   >> event.left_up;
+        iss >> event.middle >> event.middle_down >> event.middle_up;
+        iss >> event.right  >> event.right_down  >> event.right_up;
+        iss >> event.alt    >> event.ctrl        >> event.shift;
         callback_mouse_(event);
     }
 }

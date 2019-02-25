@@ -3,12 +3,15 @@
 
 struct Point
 {
-    double x, y, z;
+    double x;
+    double y;
+    double z;
 };
 
-struct MouseEvent
+struct Ray
 {
-    Point raypos, rayvec, campos, camvec;
+    Point origin;
+    Point direction;
 };
 
 #endif

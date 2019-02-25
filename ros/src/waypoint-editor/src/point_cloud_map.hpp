@@ -14,7 +14,7 @@ class PointCloudMap
         ~PointCloudMap() = default;
 
         bool updateTransform();
-        Point getGroundPoint(const Point& raypos, const Point& rayvec);
+        Point getGroundPoint(const Ray& ray);
 
     private:
 
