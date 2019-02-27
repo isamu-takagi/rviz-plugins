@@ -22,6 +22,7 @@ class WaypointEditorLibrary
 
         const Waypoints& get() const;
         void load(const std::string& filepath);
+        void save(const std::string& filepath);
 
     private:
 

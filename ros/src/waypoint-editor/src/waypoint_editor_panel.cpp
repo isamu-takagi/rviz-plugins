@@ -15,6 +15,10 @@ WaypointEditor::WaypointEditor()
     layout->addWidget(load_button);
     connect(load_button, &QPushButton::clicked, this, &WaypointEditor::load_waypoints);
 
+    auto save_button = new QPushButton("Save");
+    layout->addWidget(save_button);
+    connect(save_button, &QPushButton::clicked, this, &WaypointEditor::save_waypoints);
+
     layout->addStretch();
 }
 
@@ -36,6 +40,15 @@ void WaypointEditor::load_waypoints()
     {
         waypoint_editor_.load(filepath.toStdString());
         waypoint_viewer_.publish(waypoint_editor_.get());
+    }
+}
+
+void WaypointEditor::save_waypoints()
+{
+    QString filepath = QFileDialog::getSaveFileName(this);
+    if(!filepath.isEmpty())
+    {
+        waypoint_editor_.save(filepath.toStdString());
     }
 }
 

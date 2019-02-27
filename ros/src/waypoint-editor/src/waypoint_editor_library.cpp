@@ -3,7 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
-#include <iostream> // debug
+#include <iomanip>
 
 namespace rviz_plugins {
 
@@ -97,6 +97,27 @@ void WaypointEditorLibrary::load(const std::string& filepath)
         getline(iss, cell, ',');  w.steer  = std::stoi(cell);
         getline(iss, cell, ',');  w.stop   = std::stoi(cell);
         waypoints_.push_back(w);
+    }
+}
+
+void WaypointEditorLibrary::save(const std::string& filepath)
+{
+    std::ofstream ofs(filepath.c_str());
+    if(!ofs) { return; }
+
+    ofs << "x,y,z,yaw,velocity,change_flag,event_flag,steering_flag,stop_flag" << std::endl;
+    ofs << std::fixed << std::setprecision(4);
+    for(const auto& waypoint : waypoints_)
+    {
+        ofs << waypoint.pos.x  << ',';
+        ofs << waypoint.pos.y  << ',';
+        ofs << waypoint.pos.z  << ',';
+        ofs << waypoint.yaw    << ',';
+        ofs << waypoint.vel    << ',';
+        ofs << waypoint.change << ',';
+        ofs << waypoint.event  << ',';
+        ofs << waypoint.steer  << ',';
+        ofs << waypoint.stop   << std::endl;
     }
 }
 

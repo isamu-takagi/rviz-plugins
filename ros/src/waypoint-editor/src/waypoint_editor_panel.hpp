@@ -25,6 +25,7 @@ class WaypointEditor: public rviz::Panel
     private:
 
         void load_waypoints();
+        void save_waypoints();
         void processMouseEvent(const MouseEvent& event);
 
         EventCaptureClient capture_client_;
