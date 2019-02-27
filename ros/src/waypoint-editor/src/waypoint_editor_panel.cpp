@@ -32,14 +32,38 @@ void WaypointEditor::onInitialize()
     capture_client_.setMouseEvent(this, &WaypointEditor::processMouseEvent);
 }
 
-#include <iostream>
 void WaypointEditor::processMouseEvent(const MouseEvent& event)
 {
-    if(event.right_down)
+    if(event.shift)
     {
-        Point gndpos = point_cloud_map_.getGroundPoint(event.select);
-        waypoint_editor_.add(gndpos);
-        waypoint_viewer_.publish(waypoint_editor_.get());
+        if(event.right_down)
+        {
+            Point gndpos = point_cloud_map_.getGroundPoint(event.select);
+            waypoint_editor_.add(gndpos);
+            waypoint_viewer_.publish(waypoint_editor_.get());
+        }
+    }
+    else
+    {
+        if(event.right_down)
+        {
+            Point gndpos = point_cloud_map_.getGroundPoint(event.select);
+            waypoint_editor_.select(gndpos);
+        }
+        else if(event.right)
+        {
+            Point gndpos = point_cloud_map_.getGroundPoint(event.select);
+            waypoint_editor_.move(gndpos);
+            waypoint_viewer_.publish(waypoint_editor_.get());
+        }
+        else if(event.right_up)
+        {
+            waypoint_editor_.release();
+        }
+        else
+        {
+
+        }
     }
 }
 

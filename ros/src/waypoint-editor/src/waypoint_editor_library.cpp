@@ -14,15 +14,13 @@ void WaypointEditorLibrary::add(const Point& point)
     if(waypoints_.empty())
     {
         Waypoint waypoint;
-        waypoint.x = point.x;
-        waypoint.y = point.y;
-        waypoint.z = point.z;
+        waypoint.pos = point;
         waypoints_.push_back(waypoint);
     }
     else
     {
-        Waypoint origin, vector;
-        origin = waypoints_.back();
+        Point origin, vector;
+        origin = waypoints_.back().pos;
         vector.x = point.x - origin.x;
         vector.y = point.y - origin.y;
         vector.z = point.z - origin.z;
@@ -31,12 +29,41 @@ void WaypointEditorLibrary::add(const Point& point)
         for(int i = 1; i <= loop; ++i)
         {
             Waypoint waypoint;
-            waypoint.x = origin.x + (vector.x * i / loop);
-            waypoint.y = origin.y + (vector.y * i / loop);
-            waypoint.z = origin.z + (vector.z * i / loop);
+            waypoint.pos.x = origin.x + (vector.x * i / loop);
+            waypoint.pos.y = origin.y + (vector.y * i / loop);
+            waypoint.pos.z = origin.z + (vector.z * i / loop);
             waypoints_.push_back(waypoint);
         }
     }
+}
+
+void WaypointEditorLibrary::select(const Point& point)
+{
+    double min_distance = 1e+10;
+    selected_ = nullptr;
+
+    for(auto& waypoint : waypoints_)
+    {
+        double distance = geometry_distance(point, waypoint.pos);
+        if(distance < min_distance)
+        {
+            min_distance = distance;
+            selected_ = &waypoint;
+        }
+    }
+}
+
+void WaypointEditorLibrary::move(const Point& point)
+{
+    if(selected_)
+    {
+        selected_->pos = point;
+    }
+}
+
+void WaypointEditorLibrary::release()
+{
+    selected_ = nullptr;
 }
 
 /*

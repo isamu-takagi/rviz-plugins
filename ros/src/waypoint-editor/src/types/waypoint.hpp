@@ -2,12 +2,11 @@
 #define TYPES_WAYPOINT_HPP
 
 #include <vector>
+#include "types/geometry.hpp"
 
 struct Waypoint
 {
-    double x;
-    double y;
-    double z;
+    Point pos;
     double yaw;
     double vel;
     int change;

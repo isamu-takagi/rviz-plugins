@@ -15,10 +15,14 @@ class WaypointEditorLibrary
 
         const Waypoints& get() const;
         void add(const Point& point);
+        void select(const Point& point);
+        void move(const Point& point);
+        void release();
 
     private:
 
         Waypoints waypoints_;
+        Waypoint* selected_;
 };
 
 }

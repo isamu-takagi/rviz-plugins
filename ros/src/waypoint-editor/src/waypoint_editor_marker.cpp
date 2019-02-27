@@ -3,7 +3,6 @@
 
 namespace rviz_plugins {
 
-
 WaypointEditorMarker::WaypointEditorMarker()
 {
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
@@ -40,9 +39,9 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints)
         for(const auto& waypoint : waypoints)
         {
             geometry_msgs::Point p;
-            p.x = waypoint.x;
-            p.y = waypoint.y;
-            p.z = waypoint.z;
+            p.x = waypoint.pos.x;
+            p.y = waypoint.pos.y;
+            p.z = waypoint.pos.z;
             marker.points.push_back(p);
         }
 
@@ -66,9 +65,9 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints)
 
             marker.text = std::to_string(count);
 
-            marker.pose.position.x = waypoint.x;
-            marker.pose.position.y = waypoint.y;
-            marker.pose.position.z = waypoint.z + 1.0;
+            marker.pose.position.x = waypoint.pos.x;
+            marker.pose.position.y = waypoint.pos.y;
+            marker.pose.position.z = waypoint.pos.z + 1.0;
             marker.pose.orientation.x = 0.0;
             marker.pose.orientation.y = 0.0;
             marker.pose.orientation.z = 0.0;
