@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   std_msgs
   geometry_msgs
+  pcl_ros
 )
 
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)

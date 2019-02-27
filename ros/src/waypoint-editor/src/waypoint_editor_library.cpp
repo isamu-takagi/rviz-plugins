@@ -1,8 +1,16 @@
 #include "waypoint_editor_library.hpp"
 
 #include <cmath>
+#include <fstream>
+#include <sstream>
+#include <iostream> // debug
 
 namespace rviz_plugins {
+
+WaypointEditorLibrary::WaypointEditorLibrary()
+{
+    select_radius_ = 0.5;
+}
 
 const Waypoints& WaypointEditorLibrary::get() const
 {
@@ -45,7 +53,7 @@ void WaypointEditorLibrary::select(const Point& point)
     for(auto& waypoint : waypoints_)
     {
         double distance = geometry_distance(point, waypoint.pos);
-        if(distance < min_distance)
+        if((distance < select_radius_) && (distance < min_distance))
         {
             min_distance = distance;
             selected_ = &waypoint;
@@ -66,30 +74,22 @@ void WaypointEditorLibrary::release()
     selected_ = nullptr;
 }
 
-/*
-void WaypointEditor::load_waypoints()
+void WaypointEditorLibrary::load(const std::string& filepath)
 {
-    QString filepath = QFileDialog::getOpenFileName(this);
-    if(filepath.isEmpty())
-    {
-        return;
-    }
+    std::ifstream ifs(filepath.c_str());
+    if(!ifs) { return; }
 
     std::string line, cell;
-    std::ifstream ifs(filepath.toStdString().c_str());
+    getline(ifs, line); // Skip header line
 
-    // Skip header line
-    getline(ifs, line);
-    std::cout << line << std::endl;
-
-    // Load waypoints
+    waypoints_.clear();
     while(getline(ifs, line), ifs)
     {
         std::istringstream iss(line);
         Waypoint w;
-        getline(iss, cell, ',');  w.x   = std::stod(cell);
-        getline(iss, cell, ',');  w.y   = std::stod(cell);
-        getline(iss, cell, ',');  w.z   = std::stod(cell);
+        getline(iss, cell, ',');  w.pos.x = std::stod(cell);
+        getline(iss, cell, ',');  w.pos.y = std::stod(cell);
+        getline(iss, cell, ',');  w.pos.z = std::stod(cell);
         getline(iss, cell, ',');  w.yaw = std::stod(cell);
         getline(iss, cell, ',');  w.vel = std::stod(cell);
         getline(iss, cell, ',');  w.change = std::stoi(cell);
@@ -98,9 +98,6 @@ void WaypointEditor::load_waypoints()
         getline(iss, cell, ',');  w.stop   = std::stoi(cell);
         waypoints_.push_back(w);
     }
-
-    publish_markers();
 }
-*/
 
 }

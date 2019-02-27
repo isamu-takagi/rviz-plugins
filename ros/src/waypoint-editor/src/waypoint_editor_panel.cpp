@@ -4,10 +4,6 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
 namespace rviz_plugins {
 
 WaypointEditor::WaypointEditor()
@@ -17,7 +13,7 @@ WaypointEditor::WaypointEditor()
 
     auto load_button = new QPushButton("Load");
     layout->addWidget(load_button);
-    //connect(load_button, &QPushButton::clicked, this, &WaypointEditor::load_waypoints);
+    connect(load_button, &QPushButton::clicked, this, &WaypointEditor::load_waypoints);
 
     layout->addStretch();
 }
@@ -29,7 +25,18 @@ WaypointEditor::~WaypointEditor()
 
 void WaypointEditor::onInitialize()
 {
+    point_cloud_map_.updateMap();
     capture_client_.setMouseEvent(this, &WaypointEditor::processMouseEvent);
+}
+
+void WaypointEditor::load_waypoints()
+{
+    QString filepath = QFileDialog::getOpenFileName(this);
+    if(!filepath.isEmpty())
+    {
+        waypoint_editor_.load(filepath.toStdString());
+        waypoint_viewer_.publish(waypoint_editor_.get());
+    }
 }
 
 void WaypointEditor::processMouseEvent(const MouseEvent& event)

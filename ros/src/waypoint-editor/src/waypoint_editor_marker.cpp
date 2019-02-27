@@ -10,22 +10,57 @@ WaypointEditorMarker::WaypointEditorMarker()
 
 void WaypointEditorMarker::publish(const Waypoints& waypoints)
 {
-    const std::string frame = "/world";
+    const std::string frame = "/map";
     visualization_msgs::MarkerArray msg;
 
-    // Points
+    // Line
+    {
+        visualization_msgs::Marker marker;
+        marker.header.frame_id = frame;
+        marker.header.stamp = ros::Time::now();
+        marker.ns = "link";
+        marker.id = 0;
+        marker.type = visualization_msgs::Marker::LINE_STRIP;
+        marker.action = visualization_msgs::Marker::ADD;
+        marker.lifetime = ros::Duration();
+
+        marker.scale.x = 0.1;
+        marker.scale.y = 0.0;
+        marker.scale.z = 0.0;
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+        marker.color.r = 1.0f;
+        marker.color.g = 1.0f;
+        marker.color.b = 1.0f;
+        marker.color.a = 1.0f;
+
+        for(const auto& waypoint : waypoints)
+        {
+            geometry_msgs::Point p;
+            p.x = waypoint.pos.x;
+            p.y = waypoint.pos.y;
+            p.z = waypoint.pos.z;
+            marker.points.push_back(p);
+        }
+
+        msg.markers.push_back(marker);
+    }
+
+    // Point
     {
         visualization_msgs::Marker marker;
         marker.header.frame_id = frame;
         marker.header.stamp = ros::Time::now();
         marker.ns = "node";
-        marker.id = 0;
+        marker.id = 1;
         marker.type = visualization_msgs::Marker::POINTS;
         marker.action = visualization_msgs::Marker::ADD;
         marker.lifetime = ros::Duration();
 
-        marker.scale.x = 0.5;
-        marker.scale.y = 0.5;
+        marker.scale.x = 0.3;
+        marker.scale.y = 0.3;
         marker.scale.z = 0.0;
         marker.pose.orientation.x = 0.0;
         marker.pose.orientation.y = 0.0;
@@ -47,6 +82,7 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints)
 
         msg.markers.push_back(marker);
     }
+
 
     // Text
     if(false)
