@@ -18,15 +18,22 @@ class WaypointEditor: public rviz::Panel
     public:
 
         WaypointEditor();
-        ~WaypointEditor();
+        ~WaypointEditor() = default;
 
         void onInitialize() override;
 
+    public Q_SLOTS:
+
+        void changeEditMode(int mode);
+
     private:
 
-        void load_waypoints();
-        void save_waypoints();
+        void loadWaypoints();
+        void saveWaypoints();
         void processMouseEvent(const MouseEvent& event);
+
+        enum EditMode { MODE_NONE=0, MODE_MOV=1, MODE_ADD=2 };
+        EditMode edit_mode_;
 
         EventCaptureClient capture_client_;
         PointCloudMap point_cloud_map_;

@@ -8,9 +8,8 @@ WaypointEditorMarker::WaypointEditorMarker()
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
 }
 
-void WaypointEditorMarker::publish(const Waypoints& waypoints)
+void WaypointEditorMarker::publish(const Waypoints& waypoints, const std::string& frame)
 {
-    const std::string frame = "/map";
     int marker_id = -1;
     visualization_msgs::MarkerArray msg;
 
@@ -82,7 +81,6 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints)
 
         msg.markers.push_back(marker);
     }
-
 
     // Text
     int csv_row = 1;

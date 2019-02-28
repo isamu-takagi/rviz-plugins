@@ -3,6 +3,7 @@
 
 #include "types/waypoint.hpp"
 #include <ros/ros.h>
+#include <string>
 
 namespace rviz_plugins {
 
@@ -13,7 +14,7 @@ class WaypointEditorMarker
         WaypointEditorMarker();
         ~WaypointEditorMarker() = default;
 
-        void publish(const Waypoints& waypoints);
+        void publish(const Waypoints& waypoints, const std::string& frame);
 
     private:
 

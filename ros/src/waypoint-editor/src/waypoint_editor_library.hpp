@@ -20,7 +20,7 @@ class WaypointEditorLibrary
         void move(const Point& point);
         void release();
 
-        const Waypoints& get() const;
+        const Waypoints& getWaypoints() const;
         void load(const std::string& filepath);
         void save(const std::string& filepath);
 

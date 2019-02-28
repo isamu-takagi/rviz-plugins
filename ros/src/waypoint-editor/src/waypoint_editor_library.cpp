@@ -12,7 +12,7 @@ WaypointEditorLibrary::WaypointEditorLibrary()
     select_radius_ = 0.5;
 }
 
-const Waypoints& WaypointEditorLibrary::get() const
+const Waypoints& WaypointEditorLibrary::getWaypoints() const
 {
     return waypoints_;
 }

@@ -12,6 +12,8 @@ namespace rviz_plugins {
 
 PointCloudMap::PointCloudMap()
 {
+    ground_height_global_ = 0.0;
+    target_frame_ = "/world";
     transform_.transform.translation.x = 0.0;
     transform_.transform.translation.y = 0.0;
     transform_.transform.translation.z = 0.0;
@@ -19,7 +21,11 @@ PointCloudMap::PointCloudMap()
     transform_.transform.rotation.y = 0.0;
     transform_.transform.rotation.z = 0.0;
     transform_.transform.rotation.w = 1.0;
-    ground_height_global_ = 0.0;
+}
+
+std::string PointCloudMap::getTargetFrame()
+{
+    return target_frame_;
 }
 
 bool PointCloudMap::updateMap()
@@ -29,6 +35,7 @@ bool PointCloudMap::updateMap()
     try
     {
         transform_ = tf_buffer.lookupTransform("map", "world", ros::Time(0), ros::Duration(1.0));
+        target_frame_ = "/map";
     }
     catch (tf2::TransformException& exception)
     {
@@ -61,10 +68,15 @@ bool PointCloudMap::updateMap()
     }
 }
 
-Point PointCloudMap::getGroundPoint(const Ray& ray)
+boost::optional<Point> PointCloudMap::getGroundPoint(const Ray& ray)
 {
-    Point gndpos = doTransform(ray.origin);
+    if((ray.direction.x != 0.0) || (ray.direction.y != 0.0) || (ray.direction.z != -1.0))
+    {
+        ROS_WARN("only top down ortho camera is supported");
+        return boost::none;
+    }
 
+    Point gndpos = doTransform(ray.origin);
     auto key = std::make_pair(floor(gndpos.x), floor(gndpos.y));
     if(ground_height_.count(key))
     {
