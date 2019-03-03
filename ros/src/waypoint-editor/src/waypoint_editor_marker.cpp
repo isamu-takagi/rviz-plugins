@@ -5,6 +5,7 @@ namespace rviz_plugins {
 
 WaypointEditorMarker::WaypointEditorMarker()
 {
+    latest_marker_size_ = 0;
     pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/waypoint_editor/markers", 1);
 }
 
@@ -115,7 +116,23 @@ void WaypointEditorMarker::publish(const Waypoints& waypoints, const std::string
         marker.color.a = 1.0;
 
         msg.markers.push_back(marker);
-}
+    }
+
+    int marker_size = latest_marker_size_;
+    latest_marker_size_ = marker_id;
+
+    // Remove
+    while(marker_id < marker_size)
+    {
+        visualization_msgs::Marker marker;
+        marker.ns = "text";
+        marker.id = ++marker_id;
+        marker.action = visualization_msgs::Marker::DELETE;
+
+
+        msg.markers.push_back(marker);
+        ROS_INFO("Remove %d", marker_id);
+    }
 
     pub_.publish(msg);
 }

@@ -32,7 +32,12 @@ class WaypointEditor: public rviz::Panel
         void saveWaypoints();
         void processMouseEvent(const MouseEvent& event);
 
-        enum EditMode { MODE_NONE=0, MODE_MOV=1, MODE_ADD=2 };
+        void onSelect(const MouseEvent& event);
+        void onMove(const MouseEvent& event);
+        void onAdd(const MouseEvent& event);
+        void onDelete(const MouseEvent& event);
+
+        enum EditMode { MODE_NONE=0, MODE_MOV=1, MODE_ADD=2, MODE_DEL=3 };
         EditMode edit_mode_;
 
         EventCaptureClient capture_client_;

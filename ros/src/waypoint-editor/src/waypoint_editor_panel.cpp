@@ -17,14 +17,20 @@ WaypointEditor::WaypointEditor()
     connect(load_button, &QPushButton::clicked, this, &WaypointEditor::loadWaypoints);
     connect(save_button, &QPushButton::clicked, this, &WaypointEditor::saveWaypoints);
 
+    //auto mode_button_undo = new QPushButton("Undo");
+    //auto mode_button_redo = new QPushButton("Redo");
+
     auto mode_button_mov = new QPushButton("Move");
     auto mode_button_add = new QPushButton("Add");
+    auto mode_button_del = new QPushButton("Delete");
     mode_button_mov->setCheckable(true);
     mode_button_add->setCheckable(true);
+    mode_button_del->setCheckable(true);
 
     auto mode_button_group = new QButtonGroup(this);
     mode_button_group->addButton(mode_button_mov, MODE_MOV);
     mode_button_group->addButton(mode_button_add, MODE_ADD);
+    mode_button_group->addButton(mode_button_del, MODE_DEL);
     connect(mode_button_group, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &WaypointEditor::changeEditMode);
 
     auto layout = new QVBoxLayout();
@@ -32,7 +38,11 @@ WaypointEditor::WaypointEditor()
     layout->addWidget(new QLabel("Edit Mode"));
     layout->addWidget(mode_button_mov);
     layout->addWidget(mode_button_add);
-    layout->addWidget(new QLabel("File"));
+    layout->addWidget(mode_button_del);
+    //layout->addWidget(new QLabel("Command"));
+    //layout->addWidget(mode_button_undo);
+    //layout->addWidget(mode_button_redo);
+    layout->addWidget(new QLabel("File Access"));
     layout->addWidget(load_button);
     layout->addWidget(save_button);
     layout->addStretch();
@@ -73,55 +83,73 @@ void WaypointEditor::processMouseEvent(const MouseEvent& event)
 {
     if(event.shift)
     {
+        return onSelect(event);
+    }
 
+    switch(edit_mode_)
+    {
+        case MODE_MOV: return onMove(event);
+        case MODE_ADD: return onAdd(event);
+        case MODE_DEL: return onDelete(event);
+    }
+}
+
+void WaypointEditor::onSelect(const MouseEvent& event)
+{
+
+}
+
+void WaypointEditor::onMove(const MouseEvent& event)
+{
+    if(event.right_down)
+    {
+        boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
+        if(gndpos)
+        {
+            waypoint_editor_.select(gndpos.get());
+        }
+    }
+    else if(event.right)
+    {
+        boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
+        if(gndpos)
+        {
+            waypoint_editor_.move(gndpos.get());
+            waypoint_viewer_.publish(waypoint_editor_.getWaypoints(), point_cloud_map_.getTargetFrame());
+        }
+    }
+    else if(event.right_up)
+    {
+        waypoint_editor_.release();
     }
     else
     {
-        switch(edit_mode_)
+
+    }
+}
+
+void WaypointEditor::onAdd(const MouseEvent& event)
+{
+    if(event.right_down)
+    {
+        boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
+        if(gndpos)
         {
-            case MODE_MOV:
-            {
-                if(event.right_down)
-                {
-                    boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
-                    if(gndpos)
-                    {
-                        waypoint_editor_.select(gndpos.get());
-                    }
-                }
-                else if(event.right)
-                {
-                    boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
-                    if(gndpos)
-                    {
-                        waypoint_editor_.move(gndpos.get());
-                        waypoint_viewer_.publish(waypoint_editor_.getWaypoints(), point_cloud_map_.getTargetFrame());
-                    }
-                }
-                else if(event.right_up)
-                {
-                    waypoint_editor_.release();
-                }
-                else
-                {
+            waypoint_editor_.add(gndpos.get());
+            waypoint_viewer_.publish(waypoint_editor_.getWaypoints(), point_cloud_map_.getTargetFrame());
+        }
+    }
+}
 
-                }
-                break;
-            }
-
-            case MODE_ADD:
-            {
-                if(event.right_down)
-                {
-                    boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
-                    if(gndpos)
-                    {
-                        waypoint_editor_.add(gndpos.get());
-                        waypoint_viewer_.publish(waypoint_editor_.getWaypoints(), point_cloud_map_.getTargetFrame());
-                    }
-                }
-                break;
-            }
+void WaypointEditor::onDelete(const MouseEvent& event)
+{
+    if(event.right_down)
+    {
+        boost::optional<Point> gndpos = point_cloud_map_.getGroundPoint(event.select);
+        if(gndpos)
+        {
+            waypoint_editor_.remove(gndpos.get());
+            waypoint_viewer_.publish(waypoint_editor_.getWaypoints(), point_cloud_map_.getTargetFrame());
         }
     }
 }

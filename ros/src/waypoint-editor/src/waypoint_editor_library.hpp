@@ -16,6 +16,7 @@ class WaypointEditorLibrary
         ~WaypointEditorLibrary() = default;
 
         void add(const Point& point);
+        void remove(const Point& point);
         void select(const Point& point);
         void move(const Point& point);
         void release();

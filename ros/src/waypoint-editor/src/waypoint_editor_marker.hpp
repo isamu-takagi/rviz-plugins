@@ -20,6 +20,8 @@ class WaypointEditorMarker
 
         ros::NodeHandle nh_;
         ros::Publisher  pub_;
+
+        int latest_marker_size_;
 };
 
 }

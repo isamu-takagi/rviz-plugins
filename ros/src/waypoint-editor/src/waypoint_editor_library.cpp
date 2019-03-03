@@ -45,6 +45,27 @@ void WaypointEditorLibrary::add(const Point& point)
     }
 }
 
+void WaypointEditorLibrary::remove(const Point& point)
+{
+    double min_distance = 1e+10;
+    auto target = waypoints_.end();
+
+    for(auto it = waypoints_.begin(); it != waypoints_.end(); ++it)
+    {
+        double distance = geometry_distance(point, it->pos);
+        if((distance < select_radius_) && (distance < min_distance))
+        {
+            min_distance = distance;
+            target = it;
+        }
+    }
+
+    if(target != waypoints_.end())
+    {
+        waypoints_.erase(target);
+    }
+}
+
 void WaypointEditorLibrary::select(const Point& point)
 {
     double min_distance = 1e+10;
