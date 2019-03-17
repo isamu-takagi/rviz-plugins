@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+import math
+import rospy
+from geometry_msgs.msg import PoseStamped
+
+def main():
+
+    rospy.init_node("pose_spiral", anonymous=True)
+    topic = rospy.Publisher("/pose_spiral", PoseStamped, queue_size=10)
+    rate = rospy.Rate(10)
+
+    counter = 0
+    while not rospy.is_shutdown():
+        radius = 1.0 + (counter % 180) / 36.0
+        degree = (counter * 10) % 360
+        message = PoseStamped()
+        message.pose.position.x = radius * math.cos(math.radians(degree))
+        message.pose.position.y = radius * math.sin(math.radians(degree))
+        print(degree)
+        print("{}, {}".format(message.pose.position.x, message.pose.position.y))
+        topic.publish(message)
+        rate.sleep()
+        counter += 1
+
+try: main()
+except rospy.ROSInterruptException: pass
