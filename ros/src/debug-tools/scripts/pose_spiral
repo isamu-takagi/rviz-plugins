@@ -3,6 +3,7 @@
 import math
 import rospy
 from geometry_msgs.msg import PoseStamped
+from tf.transformations import quaternion_from_euler
 
 def main():
 
@@ -14,11 +15,16 @@ def main():
     while not rospy.is_shutdown():
         radius = 1.0 + (counter % 180) / 36.0
         degree = (counter * 10) % 360
+        quaternion = quaternion_from_euler(0.0, 0.0, math.radians(degree))
         message = PoseStamped()
         message.header.stamp = rospy.get_rostime()
-        message.header.frame_id = "/world" if (counter / 180) % 2 else "/map"
+        message.header.frame_id = ("/world",  "/map", "/unknown")[(counter / 180) % 3]
         message.pose.position.x = radius * math.cos(math.radians(degree))
         message.pose.position.y = radius * math.sin(math.radians(degree))
+        message.pose.orientation.x = quaternion[0]
+        message.pose.orientation.y = quaternion[1]
+        message.pose.orientation.z = quaternion[2]
+        message.pose.orientation.w = quaternion[3]
         topic.publish(message)
         rate.sleep()
         counter += 1

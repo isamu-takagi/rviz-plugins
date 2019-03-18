@@ -11,6 +11,7 @@
 #include <rviz/properties/float_property.h>
 #include <rviz/properties/color_property.h>
 #include <rviz/ogre_helpers/billboard_line.h>
+//#include <rviz/ogre_helpers/arrow.h>
 #include <deque>
 #include <memory>
 
@@ -41,9 +42,16 @@ class PoseHistory : public rviz::Display
 
     private:
 
+        void updateHistory();
+        void updateLines();
+        //void updateArrows();
+
+    private:
+
         std::string target_frame_;
         std::deque<geometry_msgs::PoseStamped> history_;
         std::unique_ptr<rviz::BillboardLine> lines_;
+        //std::deque<std::unique_ptr<rviz::Arrow>> arrows_;
 
         ros::NodeHandle nh_;
         ros::Subscriber sub_;
