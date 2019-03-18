@@ -15,10 +15,10 @@ def main():
         radius = 1.0 + (counter % 180) / 36.0
         degree = (counter * 10) % 360
         message = PoseStamped()
+        message.header.stamp = rospy.get_rostime()
+        message.header.frame_id = "/world" if (counter / 180) % 2 else "/map"
         message.pose.position.x = radius * math.cos(math.radians(degree))
         message.pose.position.y = radius * math.sin(math.radians(degree))
-        print(degree)
-        print("{}, {}".format(message.pose.position.x, message.pose.position.y))
         topic.publish(message)
         rate.sleep()
         counter += 1

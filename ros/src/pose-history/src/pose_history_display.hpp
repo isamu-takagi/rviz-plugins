@@ -4,11 +4,12 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <rviz/display.h>
+#include <rviz/display_context.h>
+#include <rviz/frame_manager.h>
 #include <rviz/properties/ros_topic_property.h>
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/float_property.h>
 #include <rviz/properties/color_property.h>
-
 #include <rviz/ogre_helpers/billboard_line.h>
 #include <deque>
 #include <memory>
@@ -40,12 +41,15 @@ class PoseHistory : public rviz::Display
 
     private:
 
-        ros::NodeHandle nh_;
-        ros::Subscriber sub_;
+        std::string target_frame_;
         std::deque<geometry_msgs::PoseStamped> history_;
         std::unique_ptr<rviz::BillboardLine> lines_;
 
+        ros::NodeHandle nh_;
+        ros::Subscriber sub_;
+
         rviz::RosTopicProperty* property_topic_;
+        rviz::FloatProperty*    property_duration_;
         rviz::BoolProperty*     property_line_view_;
         rviz::FloatProperty*    property_line_width_;
         rviz::ColorProperty*    property_line_color_;

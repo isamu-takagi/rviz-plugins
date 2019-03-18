@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /PoseHistory1
+        - /PoseHistory1/Line1
       Splitter Ratio: 0.5
     Tree Height: 547
   - Class: rviz/Selection
@@ -48,7 +49,12 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz_plugins::PoseHistory
+      Duration: 5
       Enabled: true
+      Line:
+        Color: 255; 255; 255
+        Value: true
+        Width: 0.100000001
       Name: PoseHistory
       Topic: /pose_spiral
       Value: true
@@ -95,7 +101,7 @@ Visualization Manager:
       Pitch: 1.56979632
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.58039725
+      Yaw: 4.71856499
     Saved: ~
 Window Geometry:
   Displays:
