@@ -1,13 +1,13 @@
 #ifndef INITIAL_POSE3D_TOOL_HPP
 #define INITIAL_POSE3D_TOOL_HPP
 
-#include <map>
 #include <ros/ros.h>
 #include <rviz/default_plugin/tools/pose_tool.h>
 #include <rviz/properties/string_property.h>
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/float_property.h>
 #include <rviz/properties/ros_topic_property.h>
+#include <map>
 
 namespace rviz_plugins {
 
@@ -30,6 +30,7 @@ class InitialPose3dTool : public rviz::PoseTool
 
         private:
 
+            bool ground_height_available_;
             std::string ground_frame_;
             std::map<std::pair<int,int>,float> ground_height_;
 

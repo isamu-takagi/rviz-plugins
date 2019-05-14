@@ -5,8 +5,12 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rviz
-  geometry_msgs
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
   pcl_ros
+  geometry_msgs
+  sensor_msgs
 )
 
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
@@ -15,8 +19,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_definitions(-DQT_NO_KEYWORDS)
 
-catkin_package(
-  CATKIN_DEPENDS roscpp rviz
+catkin_package(CATKIN_DEPENDS
+  roscpp
+  rviz
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
+  pcl_ros
+  geometry_msgs
+  sensor_msgs
 )
 
 include_directories(
