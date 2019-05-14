@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rviz
   geometry_msgs
+  pcl_ros
 )
 
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)

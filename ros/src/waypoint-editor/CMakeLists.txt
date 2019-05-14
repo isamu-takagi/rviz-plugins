@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
 set(QT_LIBRARIES Qt5::Widgets)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_definitions(-DQT_NO_KEYWORDS)
 
 catkin_package(
@@ -27,29 +29,21 @@ include_directories(
   ${Qt5_INCLUDE_DIRS}
 )
 
-qt5_wrap_cpp(QT_HEADER_FILES
-  src/event_capture_server.hpp
-  src/event_capture_client.hpp
-  src/event_capture_tool.hpp
-  src/point_cloud_map.hpp
-  src/waypoint_editor_library.hpp
-  src/waypoint_editor_marker.hpp
-  src/waypoint_editor_panel.hpp
-)
-
-set(QT_SOURCE_FILES
-  src/event_capture_server.cpp
-  src/event_capture_client.cpp
-  src/event_capture_tool.cpp
-  src/point_cloud_map.cpp
-  src/waypoint_editor_library.cpp
-  src/waypoint_editor_marker.cpp
-  src/waypoint_editor_panel.cpp
-)
-
 add_library(${PROJECT_NAME}
-  ${QT_HEADER_FILES}
-  ${QT_SOURCE_FILES}
+  src/event_capture_server.hpp
+  src/event_capture_server.cpp
+  src/event_capture_client.hpp
+  src/event_capture_client.cpp
+  src/event_capture_tool.hpp
+  src/event_capture_tool.cpp
+  src/point_cloud_map.hpp
+  src/point_cloud_map.cpp
+  src/waypoint_editor_library.hpp
+  src/waypoint_editor_library.cpp
+  src/waypoint_editor_marker.hpp
+  src/waypoint_editor_marker.cpp
+  src/waypoint_editor_panel.hpp
+  src/waypoint_editor_panel.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

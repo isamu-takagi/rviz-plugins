@@ -15,6 +15,12 @@ struct Waypoint
     int stop;
 };
 
+struct EditPoint
+{
+    enum EditType {EDGE, CTRL, AUTO};
+    EditType type;
+};
+
 using Waypoints = std::vector<Waypoint>;
 
 #endif
