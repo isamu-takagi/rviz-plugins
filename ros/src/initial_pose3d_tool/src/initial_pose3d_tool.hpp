@@ -7,7 +7,7 @@
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/float_property.h>
 #include <rviz/properties/ros_topic_property.h>
-#include <map>
+#include <pcl/kdtree/kdtree_flann.h>
 
 namespace rviz_plugins {
 
@@ -30,9 +30,9 @@ class InitialPose3dTool : public rviz::PoseTool
 
         private:
 
-            bool ground_height_available_;
-            std::string ground_frame_;
-            std::map<std::pair<int,int>,float> ground_height_;
+            bool kdtree_available_;
+            std::string kdtree_frame_;
+            pcl::KdTreeFLANN<pcl::PointXYZ> kdtree_;
 
             ros::NodeHandle nh_;
             ros::Publisher pub_;
