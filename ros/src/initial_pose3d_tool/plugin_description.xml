@@ -1,0 +1,7 @@
+<library path="lib/libinitial_pose3d_tool">
+
+  <class type="rviz_plugins::InitialPose3dTool" base_class_type="rviz::Tool">
+    <description>The tool for 3d pose estimate</description>
+  </class>
+
+</library>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(waypoint-editor)
+project(initial_pose3d_tool)
 add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -8,9 +8,9 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_geometry_msgs
   tf2_ros
-  std_msgs
-  geometry_msgs
   pcl_ros
+  geometry_msgs
+  sensor_msgs
 )
 
 find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
@@ -19,8 +19,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_definitions(-DQT_NO_KEYWORDS)
 
-catkin_package(
-  CATKIN_DEPENDS roscpp rviz
+catkin_package(CATKIN_DEPENDS
+  roscpp
+  rviz
+  tf2
+  tf2_geometry_msgs
+  tf2_ros
+  pcl_ros
+  geometry_msgs
+  sensor_msgs
 )
 
 include_directories(
@@ -30,26 +37,22 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/event_capture_server.hpp
-  src/event_capture_server.cpp
-  src/event_capture_client.hpp
-  src/event_capture_client.cpp
-  src/event_capture_tool.hpp
-  src/event_capture_tool.cpp
-  src/point_cloud_map.hpp
-  src/point_cloud_map.cpp
-  src/waypoint_editor_library.hpp
-  src/waypoint_editor_library.cpp
-  src/waypoint_editor_marker.hpp
-  src/waypoint_editor_marker.cpp
-  src/waypoint_editor_panel.hpp
-  src/waypoint_editor_panel.cpp
+  src/initial_pose3d_tool.hpp
+  src/initial_pose3d_tool.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES} ${QT_LIBRARIES}
 )
 
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(FILES plugin_description.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
