@@ -6,15 +6,41 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
+#include <cmath>
+
+namespace {
+
+double getGroundHeight(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcdmap, const tf2::Vector3& point)
+{
+    constexpr double radius = 1.0 * 1.0;
+    const double x = point.getX();
+    const double y = point.getY();
+
+    double height = INFINITY;
+    for(const auto& p : pcdmap->points)
+    {
+        const double dx = x - p.x;
+        const double dy = y - p.y;
+        const double sd = (dx * dx) + (dy * dy);
+        if(sd < radius)
+        {
+            height = std::min(height, static_cast<double>(p.z));
+        }
+    }
+    return std::isfinite(height) ? height : point.getZ();
+}
+
+}
 
 namespace rviz_plugins {
 
 InitialPose3dTool::InitialPose3dTool()
 {
     shortcut_key_ = '3';
+
+    pcdmap_available_ = false;
+    pcdmap_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
 
     pose_topic_property_ = new rviz::StringProperty("Pose Topic", "initialpose3d", "Topic name of 3d pose estimate.", getPropertyContainer(), SLOT(updateTopic()), this);
     height_property_ = new rviz::FloatProperty("Height [m]", 0.0, "Height for pose estimate.", getPropertyContainer());
@@ -27,9 +53,9 @@ InitialPose3dTool::InitialPose3dTool()
 void InitialPose3dTool::onInitialize()
 {
     PoseTool::onInitialize();
-    setName("3D Pose Estimate");
     updateTopic();
     updateGround();
+    setName("3D Pose Estimate");
 }
 
 void InitialPose3dTool::updateTopic()
@@ -39,22 +65,20 @@ void InitialPose3dTool::updateTopic()
 
 void InitialPose3dTool::updateGround()
 {
-    kdtree_available_ = false;
+    pcdmap_available_ = false;
     if(auto_height_property_->getBool() == false)
     {
         return;
     }
 
     ROS_INFO_STREAM("Load point cloud map");
-    const auto point_msg = ros::topic::waitForMessage<sensor_msgs::PointCloud2>(map_topic_property_->getTopicStd(), ros::Duration(3.0));
+    const auto pcdmsg = ros::topic::waitForMessage<sensor_msgs::PointCloud2>(map_topic_property_->getTopicStd(), ros::Duration(3.0));
 
-    if(point_msg)
+    if(pcdmsg)
     {
-        pcl::PointCloud<pcl::PointXYZ>::Ptr point_map(new pcl::PointCloud<pcl::PointXYZ>);
-        pcl::fromROSMsg(*point_msg, *point_map);
-        kdtree_.setInputCloud(point_map);
-        kdtree_frame_ = point_msg->header.frame_id;
-        kdtree_available_ = true;
+        pcdmap_available_ = true;
+        pcdmap_frame_ = pcdmsg->header.frame_id;
+        pcl::fromROSMsg(*pcdmsg, *pcdmap_);
     }
     else
     {
@@ -67,14 +91,14 @@ void InitialPose3dTool::onPoseSet(double x, double y, double yaw)
     std::string fixed_frame = context_->getFixedFrame().toStdString();
     tf2::Vector3 point(x, y, height_property_->getFloat());
 
-    if(kdtree_available_)
+    if(pcdmap_available_)
     {
         tf2_ros::Buffer tf_buffer;
         tf2_ros::TransformListener tf_listener(tf_buffer);
         tf2::Transform transform;
         try
         {
-            const auto stamped = tf_buffer.lookupTransform(kdtree_frame_, fixed_frame, ros::Time(0), ros::Duration(1.0));
+            const auto stamped = tf_buffer.lookupTransform(pcdmap_frame_, fixed_frame, ros::Time(0), ros::Duration(1.0));
             tf2::fromMsg(stamped.transform, transform);
         }
         catch (tf2::TransformException& exception)
@@ -83,18 +107,7 @@ void InitialPose3dTool::onPoseSet(double x, double y, double yaw)
         }
 
         point = transform * point;
-        pcl::PointXYZ p(point.x(), point.y(), point.z());
-        ROS_INFO("Point: %.3f %.3f %.3f", p.x, p.y, p.z);
-
-        std::vector<int> indices(1);
-        std::vector<float> distances(1);
-        if(kdtree_.nearestKSearch(p, 1, indices, distances))
-        {
-            p.z = kdtree_.getInputCloud()->at(indices[0]).z;
-        }
-        ROS_INFO("Point: %.3f %.3f %.3f", p.x, p.y, p.z);
-
-        point.setZ(p.z);
+        point.setZ(getGroundHeight(pcdmap_, point));
         point = transform.inverse() * point;
     }
 
